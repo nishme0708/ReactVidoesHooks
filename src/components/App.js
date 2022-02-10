@@ -1,28 +1,18 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import Search from './Search';
 import Youtube from '../apis/youtube';
 import VideoList from './VideoList';
 import VideoDetail from './VideoDetail';
+import useVideo from '../hooks/useVideo';
 
-const App = ()=>{
-    const [videos,setVideos] = useState([]);
-    const [selectedVideo, setSelectedVideo] = useState(null);
+const App = () => {
+    const [ selectedVideo, setSelectedVideo ] = useState(null);
 
-    const handleSearch = (searchTerm)=>{
-        Youtube.get('/search', {
-            params: {
-                q: searchTerm
-            }
-        })
-            .then((res) => res.data.items)
-            .then((res) => {
-                setVideos(res);
-                setSelectedVideo(res[0]);
-            });
-    };
+    const [ videos, handleSearch ] = useVideo('trending');
+
     useEffect(()=>{
-        handleSearch('trending');
-    },[]);
+        setSelectedVideo(videos[0]);
+    },[videos]);
 
     return (
         <div className='ui container'>
